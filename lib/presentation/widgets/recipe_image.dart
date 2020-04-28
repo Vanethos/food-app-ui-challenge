@@ -14,12 +14,15 @@ class RecipeImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-          onTap: onClicked != null ? () => onClicked(recipe, context) : null,
-          child: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(radius)),
-          child: Image.asset(
-            recipe.assetName,
-          )),
+      onTap: onClicked != null ? () => onClicked(recipe, context) : null,
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(
+          Radius.circular(radius),
+        ),
+        child: Image.asset(
+          recipe.assetName,
+        ),
+      ),
     );
   }
 }

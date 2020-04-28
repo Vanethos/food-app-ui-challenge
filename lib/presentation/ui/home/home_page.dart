@@ -1,21 +1,17 @@
-import 'package:complex_ui/data/local/models/recipee.dart';
 import 'package:complex_ui/data/local/repositories/recipee_repository.dart';
+import 'package:complex_ui/presentation/assets/dimensions.dart';
 import 'package:complex_ui/presentation/navigation/navigation.dart';
-import 'package:complex_ui/presentation/ui/intro/intro_page.dart';
 import 'package:complex_ui/presentation/widgets/recipe_image.dart';
 import 'package:complex_ui/presentation/widgets/user_icon.dart';
 import 'package:flutter/material.dart';
 
-const marginText = 34.0;
-const marginItems = 16.0;
-const sizeIcon = 16.0;
-const marginSmall = 12.0;
-const fontSizeRecommendations = 20.0;
-
 class HomePage extends StatefulWidget {
   final RecipeeRepository recipeeRepository;
 
-  HomePage({Key key, this.recipeeRepository}) : super(key: key);
+  HomePage({
+    Key key,
+    this.recipeeRepository,
+  }) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -25,7 +21,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.0,
@@ -38,16 +33,19 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(
-                left: screenMargin, right: screenMargin, top: marginText),
+              left: marginScreen,
+              right: marginScreen,
+              top: marginText,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 GreetingText(),
-                SizedBox(
+                const SizedBox(
                   height: marginText,
                 ),
                 ChipSearchBar(),
-                SizedBox(
+                const SizedBox(
                   height: marginItems,
                 ),
                 RecipeGrid(
@@ -55,24 +53,26 @@ class _HomePageState extends State<HomePage> {
                       .getSpecialRecipees()
                       .map((recipe) => RecipeImage(
                             recipe: recipe,
-                            onClicked: (recipe, context) => navigateToDetail(context, recipe),
+                            onClicked: (recipe, context) =>
+                                navigateToDetail(context, recipe),
                           ))
                       .toList(),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: marginItems,
                 ),
               ],
             ),
           ),
           Recommendations(
-                    children: widget.recipeeRepository
-                        .getRecommendations()
-                        .map((recipe) => RecipeImage(
-                              recipe: recipe,
-                              onClicked: (recipe, context) => navigateToDetail(context, recipe),
-                            ))
-                        .toList())
+              children: widget.recipeeRepository
+                  .getRecommendations()
+                  .map((recipe) => RecipeImage(
+                        recipe: recipe,
+                        onClicked: (recipe, context) =>
+                            navigateToDetail(context, recipe),
+                      ))
+                  .toList())
         ],
       ),
     );
@@ -96,19 +96,14 @@ class GreetingText extends StatelessWidget {
     return RichText(
       textAlign: TextAlign.start,
       text: TextSpan(
-        style: TextStyle(
-            color: Colors.black,
-            fontSize: fontSizeIntro,
-            fontWeight: FontWeight.w300),
+        style: Theme.of(context).textTheme.headline1.copyWith(
+              fontWeight: FontWeight.w300,
+            ),
         children: <TextSpan>[
           TextSpan(text: "Good "),
           TextSpan(
             text: "${_getGreeting()}!",
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: fontSizeIntro,
-            ),
+            style: Theme.of(context).textTheme.headline1,
           ),
         ],
       ),
@@ -164,13 +159,19 @@ class CookChip extends StatelessWidget {
   final String text;
   final VoidCallback onDeleted;
 
-  CookChip({this.text, this.onDeleted});
+  CookChip({
+    this.text,
+    this.onDeleted,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Chip(
       label: Text(text),
-      deleteIcon: Icon(Icons.clear, size: sizeIcon),
+      deleteIcon: Icon(
+        Icons.clear,
+        size: iconSize,
+      ),
       onDeleted: onDeleted,
     );
   }
@@ -179,7 +180,10 @@ class CookChip extends StatelessWidget {
 class RecipeGrid extends StatelessWidget {
   final List<Widget> children;
 
-  RecipeGrid({this.children, Key key}) : super(key: key);
+  RecipeGrid({
+    this.children,
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -200,7 +204,7 @@ class RecipeGrid extends StatelessWidget {
                       height: smallBoxSize,
                       child: children[0],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: marginSmall,
                     ),
                     SizedBox(
@@ -210,7 +214,7 @@ class RecipeGrid extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   width: marginSmall,
                 ),
                 SizedBox(
@@ -220,55 +224,37 @@ class RecipeGrid extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: marginSmall,
             ),
-            Row(children: <Widget>[
-              SizedBox(
-                width: smallBoxSize,
-                height: smallBoxSize,
-                child: children[3],
-              ),
-              SizedBox(
-                width: marginSmall,
-              ),
-              SizedBox(
-                width: smallBoxSize,
-                height: smallBoxSize,
-                child: children[4],
-              ),
-              SizedBox(
-                width: marginSmall,
-              ),
-              SizedBox(
-                width: smallBoxSize,
-                height: smallBoxSize,
-                child: children[5],
-              ),
-            ])
+            Row(
+              children: <Widget>[
+                SizedBox(
+                  width: smallBoxSize,
+                  height: smallBoxSize,
+                  child: children[3],
+                ),
+                const SizedBox(
+                  width: marginSmall,
+                ),
+                SizedBox(
+                  width: smallBoxSize,
+                  height: smallBoxSize,
+                  child: children[4],
+                ),
+                const SizedBox(
+                  width: marginSmall,
+                ),
+                SizedBox(
+                  width: smallBoxSize,
+                  height: smallBoxSize,
+                  child: children[5],
+                ),
+              ],
+            )
           ],
         );
       },
-    );
-  }
-
-  Widget _getThreeChildView(List<Widget> children) {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          flex: 1,
-          child: Column(
-            children: <Widget>[
-              Container(
-                  margin: EdgeInsets.only(bottom: marginSmall),
-                  child: children[0]),
-              children[1],
-            ],
-          ),
-        ),
-        SizedBox(width: marginSmall),
-        Expanded(flex: 2, child: children[2]),
-      ],
     );
   }
 }
@@ -276,7 +262,10 @@ class RecipeGrid extends StatelessWidget {
 class Recommendations extends StatelessWidget {
   final List<Widget> children;
 
-  Recommendations({this.children, Key key}) : super(key: key);
+  Recommendations({
+    this.children,
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -285,22 +274,21 @@ class Recommendations extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(left: screenMargin, bottom: marginSmall),
+          padding: const EdgeInsets.only(
+            left: marginScreen,
+            bottom: marginSmall,
+          ),
           child: RichText(
             textAlign: TextAlign.start,
             text: TextSpan(
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: fontSizeRecommendations,),
+              style: Theme.of(context).textTheme.headline2.copyWith(
+                    fontWeight: FontWeight.w300,
+                  ),
               children: <TextSpan>[
                 TextSpan(text: "Your special\n"),
                 TextSpan(
                   text: "recommendations",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: fontSizeRecommendations,
-                  ),
+                  style: Theme.of(context).textTheme.headline2,
                 ),
               ],
             ),
@@ -308,14 +296,20 @@ class Recommendations extends StatelessWidget {
         ),
         SizedBox(
             height: itemSize,
-                  child: ListView(
+            child: ListView(
               scrollDirection: Axis.horizontal,
-              children: [SizedBox(width: screenMargin), ...children
-                  .map((recipe) => Container(
-                      child: recipe,
-                      margin: EdgeInsets.only(right: marginSmall)))
-                  .toList()],
-        ))
+              children: [
+                SizedBox(width: marginScreen),
+                ...children
+                    .map(
+                      (recipe) => Container(
+                        child: recipe,
+                        margin: EdgeInsets.only(right: marginSmall),
+                      ),
+                    )
+                    .toList()
+              ],
+            ))
       ],
     );
   }
