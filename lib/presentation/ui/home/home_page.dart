@@ -1,6 +1,7 @@
 import 'package:complex_ui/data/local/repositories/recipee_repository.dart';
 import 'package:complex_ui/presentation/assets/dimensions.dart';
 import 'package:complex_ui/presentation/navigation/navigation.dart';
+import 'package:complex_ui/presentation/widgets/header_widget.dart';
 import 'package:complex_ui/presentation/widgets/recipe_image.dart';
 import 'package:complex_ui/presentation/widgets/user_icon.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,11 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                GreetingText(),
+                HeaderWidget(
+                  title: "Good ",
+                  subtitle: "${_getGreeting()}!",
+                  color: Colors.black,
+                ),
                 const SizedBox(
                   height: marginText,
                 ),
@@ -77,9 +82,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-}
 
-class GreetingText extends StatelessWidget {
   String _getGreeting() {
     var time = DateTime.now();
     if (time.hour > 3 && time.hour < 12) {
@@ -89,25 +92,6 @@ class GreetingText extends StatelessWidget {
     } else {
       return "night";
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return RichText(
-      textAlign: TextAlign.start,
-      text: TextSpan(
-        style: Theme.of(context).textTheme.headline1.copyWith(
-              fontWeight: FontWeight.w300,
-            ),
-        children: <TextSpan>[
-          TextSpan(text: "Good "),
-          TextSpan(
-            text: "${_getGreeting()}!",
-            style: Theme.of(context).textTheme.headline1,
-          ),
-        ],
-      ),
-    );
   }
 }
 

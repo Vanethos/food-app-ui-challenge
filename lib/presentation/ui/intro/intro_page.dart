@@ -1,6 +1,7 @@
 import 'package:complex_ui/presentation/assets/dimensions.dart';
 import 'package:complex_ui/presentation/assets/images.dart';
 import 'package:complex_ui/presentation/navigation/navigation.dart';
+import 'package:complex_ui/presentation/widgets/header_widget.dart';
 import 'package:complex_ui/presentation/widgets/platform_aware_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -35,23 +36,9 @@ class IntroPage extends StatelessWidget {
         Positioned(
           left: marginScreen,
           top: textDisplacement,
-          child: RichText(
-            textAlign: TextAlign.start,
-            text: TextSpan(
-              style: Theme.of(context).textTheme.headline1.copyWith(
-                    fontWeight: FontWeight.w300,
-                    color: Colors.white,
-                  ),
-              children: <TextSpan>[
-                TextSpan(text: "Welcome\n"),
-                TextSpan(
-                  text: "to cook book",
-                  style: Theme.of(context).textTheme.headline1.copyWith(
-                        color: Colors.white,
-                      ),
-                ),
-              ],
-            ),
+          child: HeaderWidget(
+            title: "Welcome\n",
+            subtitle: "to cook book",
           ),
         ),
         Align(

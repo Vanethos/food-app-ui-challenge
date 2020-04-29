@@ -1,7 +1,6 @@
 import 'package:complex_ui/data/local/models/recipee.dart';
 import 'package:complex_ui/presentation/assets/dimensions.dart';
-import 'package:complex_ui/presentation/ui/home/home_page.dart';
-import 'package:complex_ui/presentation/ui/intro/intro_page.dart';
+import 'package:complex_ui/presentation/widgets/header_widget.dart';
 import 'package:complex_ui/presentation/widgets/platform_aware_button.dart';
 import 'package:complex_ui/presentation/widgets/recipe_image.dart';
 import 'package:complex_ui/presentation/widgets/user_icon.dart';
@@ -72,23 +71,9 @@ class RecipeNameWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        RichText(
-          textAlign: TextAlign.start,
-          text: TextSpan(
-            style: Theme.of(context).textTheme.headline1.copyWith(
-                  fontWeight: FontWeight.w300,
-                  color: Colors.white,
-                ),
-            children: <TextSpan>[
-              TextSpan(text: "The best\n"),
-              TextSpan(
-                text: recipe.name.toLowerCase(),
-                style: Theme.of(context).textTheme.headline1.copyWith(
-                      color: Colors.white,
-                    ),
-              ),
-            ],
-          ),
+        HeaderWidget(
+          title: "The best\n",
+          subtitle: "${recipe.name}",
         ),
         const SizedBox(
           height: marginSmall,
