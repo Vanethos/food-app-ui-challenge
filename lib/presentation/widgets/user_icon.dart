@@ -1,4 +1,3 @@
-import 'package:complex_ui/presentation/assets/images.dart';
 import 'package:flutter/material.dart';
 
 class UserIcon extends StatelessWidget {
@@ -9,16 +8,11 @@ class UserIcon extends StatelessWidget {
       child: Stack(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(
-              top: 12.0,
-              right: 12.0,
-            ),
+            padding: const EdgeInsets.only(top: 12.0, right: 12.0),
             child: ClipRRect(
-              borderRadius: BorderRadius.all(
-                Radius.circular(8.0),
-              ),
+              borderRadius: BorderRadius.all(Radius.circular(8.0)),
               child: Image.asset(
-                userAvatarImage,
+                "assets/user/avatar.jpg",
               ),
             ),
           ),

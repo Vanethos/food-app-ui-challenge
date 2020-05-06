@@ -1,33 +1,41 @@
-import 'package:complex_ui/data/local/models/recipee.dart';
-import 'package:complex_ui/presentation/assets/dimensions.dart';
-import 'package:complex_ui/presentation/widgets/header_widget.dart';
+import 'dart:async';
+
+import 'package:complex_ui/data/local/models/recipe.dart';
+import 'package:complex_ui/presentation/ui/home/home_page.dart';
+import 'package:complex_ui/presentation/ui/intro/intro_page.dart';
 import 'package:complex_ui/presentation/widgets/platform_aware_button.dart';
 import 'package:complex_ui/presentation/widgets/recipe_image.dart';
 import 'package:complex_ui/presentation/widgets/user_icon.dart';
 import 'package:flutter/material.dart';
 
-class RecipeDetailpage extends StatefulWidget {
+const marginTop = 36.0;
+const marginBottom = 12.0;
+const iconSize = 12.0;
+const textSizeReview = 12.0;
+const textSizeDetails = 16.0;
+const iconSizeDetails = 16.0;
+const marginMini = 4.0;
+const marginMedium = 16.0;
+
+class RecipeDetailPage extends StatefulWidget {
   final Recipe recipe;
 
-  const RecipeDetailpage({Key key, this.recipe}) : super(key: key);
+  const RecipeDetailPage({Key key, this.recipe}) : super(key: key);
   @override
-  _RecipeDetailpageState createState() => _RecipeDetailpageState();
+  _RecipeDetailPageState createState() => _RecipeDetailPageState();
 }
 
-class _RecipeDetailpageState extends State<RecipeDetailpage> {
+class _RecipeDetailPageState extends State<RecipeDetailPage> {
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        actions: <Widget>[
-          UserIcon(),
-        ],
+        actions: <Widget>[UserIcon()],
         elevation: 0,
         backgroundColor: Colors.black,
-        iconTheme: IconThemeData(
-          color: Colors.white,
-        ),
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Stack(children: <Widget>[
         Column(
@@ -35,34 +43,35 @@ class _RecipeDetailpageState extends State<RecipeDetailpage> {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(
-                  left: marginScreen,
-                  right: marginScreen,
-                  top: marginRecipeTop,
-                  bottom: marginRecipeBottom),
-              child: RecipeNameWidget(
-                recipe: widget.recipe,
+                left: screenMargin,
+                right: screenMargin,
+                top: marginTop,
+                bottom: marginBottom
               ),
+              child: RecipeNameWidget(recipe: widget.recipe),
             ),
             SafeArea(
-              child: RecipeImage(
-                recipe: widget.recipe,
+              child: Hero(
+                tag: widget.recipe.name,
+                child: RecipeImage(recipe: widget.recipe)
               ),
-            )
+            ),
           ],
         ),
         Align(
           alignment: Alignment.bottomCenter,
-          child: BottomDetailWidget(
-            recipe: widget.recipe,
-          ),
-        )
+          child: BottomDetailWidget(recipe: widget.recipe),
+        ),
       ]),
     );
   }
 }
 
 class RecipeNameWidget extends StatelessWidget {
-  const RecipeNameWidget({Key key, @required this.recipe}) : super(key: key);
+  const RecipeNameWidget({
+    Key key,
+    @required this.recipe
+  }) : super(key: key);
 
   final Recipe recipe;
 
@@ -71,11 +80,28 @@ class RecipeNameWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        HeaderWidget(
-          title: "The best\n",
-          subtitle: "${recipe.name}",
+        RichText(
+          textAlign: TextAlign.start,
+          text: TextSpan(
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: fontSizeIntro,
+              fontWeight: FontWeight.w300
+            ),
+            children: <TextSpan>[
+              TextSpan(text: "The best\n"),
+              TextSpan(
+                text: recipe.name.toLowerCase(),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: fontSizeIntro,
+                ),
+              ),
+            ],
+          ),
         ),
-        const SizedBox(
+        SizedBox(
           height: marginSmall,
         ),
         Row(
@@ -83,12 +109,14 @@ class RecipeNameWidget extends StatelessWidget {
             StarsWidget(
               stars: recipe.startCount,
             ),
-            const SizedBox(
+            SizedBox(
               width: marginMini,
             ),
             Text(
               "${recipe.reviewCount} reviews",
-              style: Theme.of(context).textTheme.bodyText2,
+              style: TextStyle(
+                color: Colors.white, fontSize: textSizeReview
+              ),
             )
           ],
         )
@@ -97,7 +125,7 @@ class RecipeNameWidget extends StatelessWidget {
   }
 }
 
-class BottomDetailWidget extends StatelessWidget {
+class BottomDetailWidget extends StatefulWidget {
   const BottomDetailWidget({
     Key key,
     @required this.recipe,
@@ -106,9 +134,39 @@ class BottomDetailWidget extends StatelessWidget {
   final Recipe recipe;
 
   @override
+  _BottomDetailWidgetState createState() => _BottomDetailWidgetState();
+}
+
+class _BottomDetailWidgetState extends State<BottomDetailWidget> with SingleTickerProviderStateMixin{
+  AnimationController _animationController;
+
+  @override
+  void initState() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 150),
+    );
+    Timer(Duration(milliseconds: 300), runAnimationAfterDelay);
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  void runAnimationAfterDelay(){
+    _animationController.forward();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.all(marginScreen),
+    return FadeTransition(
+      opacity: _animationController,
+      child: Container(
+        padding: EdgeInsets.all(screenMargin),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
@@ -126,20 +184,20 @@ class BottomDetailWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   DetailWidget(
-                    text: "${recipe.pieces} pieces",
+                    text: "${widget.recipe.pieces} pieces",
                     icon: Icons.adjust,
                   ),
                   DetailWidget(
-                    text: "${recipe.calories} cal",
-                    icon: Icons.add_box,
+                    text: "${widget.recipe.calories} cal",
+                    icon: Icons.add_box
                   ),
                   DetailWidget(
-                    text: "${recipe.minDuration.inMinutes} min",
-                    icon: Icons.access_time,
+                    text: "${widget.recipe.minDuration.inMinutes} min",
+                    icon: Icons.access_time
                   ),
                 ],
               ),
-              const SizedBox(
+              SizedBox(
                 height: marginItems,
               ),
               IntrinsicHeight(
@@ -151,28 +209,31 @@ class BottomDetailWidget extends StatelessWidget {
                       child: PlatformAwareButton(
                         text: "Start cooking",
                         onPressed: () => print("Yay!"),
-                      ),
+                      )
                     ),
-                    const SizedBox(
+                    SizedBox(
                       width: marginMedium,
                     ),
                     AspectRatio(
                       aspectRatio: 1.0,
                       child: Container(
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(12.0),
-                            ),
-                            border: Border.all()),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(12.0),
+                          ),
+                          border: Border.all()
+                        ),
                         child: Icon(Icons.favorite),
-                      ),
+                      )
                     )
                   ],
                 ),
               )
             ],
           ),
-        ));
+        )
+      ),
+    );
   }
 }
 
@@ -210,7 +271,7 @@ class StarWidget extends StatelessWidget {
     return Icon(
       isFull ? Icons.star : Icons.star_border,
       color: Theme.of(context).primaryColor,
-      size: iconSmallSize,
+      size: iconSize,
     );
   }
 }
@@ -228,11 +289,11 @@ class DetailWidget extends StatelessWidget {
         Icon(
           icon,
           color: Theme.of(context).primaryColor,
-          size: iconSize,
+          size: iconSizeDetails,
         ),
         Text(
           " $text",
-          style: Theme.of(context).textTheme.bodyText1,
+          style: TextStyle(fontSize: textSizeDetails),
         )
       ],
     );

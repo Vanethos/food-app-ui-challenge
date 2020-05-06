@@ -20,16 +20,16 @@ class HeaderWidget extends StatelessWidget {
         children: <TextSpan>[
           TextSpan(
             text: title,
-            style: Theme.of(context).textTheme.headline1.copyWith(
-                  fontWeight: FontWeight.w300,
-                  color: color,
-                ),
+            style: Theme.of(context).textTheme.headline.copyWith(
+              fontWeight: FontWeight.w300,
+              color: color,
+            ),
           ),
           TextSpan(
             text: subtitle,
-            style: Theme.of(context).textTheme.headline1.copyWith(
-                  color: color,
-                ),
+            style: Theme.of(context).textTheme.headline.copyWith(
+              color: color,
+            ),
           ),
         ],
       ),

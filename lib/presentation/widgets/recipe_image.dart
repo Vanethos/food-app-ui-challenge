@@ -1,4 +1,4 @@
-import 'package:complex_ui/data/local/models/recipee.dart';
+import 'package:complex_ui/data/local/models/recipe.dart';
 import 'package:flutter/material.dart';
 
 const radius = 16.0;
@@ -16,12 +16,10 @@ class RecipeImage extends StatelessWidget {
     return GestureDetector(
       onTap: onClicked != null ? () => onClicked(recipe, context) : null,
       child: ClipRRect(
-        borderRadius: BorderRadius.all(
-          Radius.circular(radius),
-        ),
+        borderRadius: BorderRadius.all(Radius.circular(radius)),
         child: Image.asset(
           recipe.assetName,
-        ),
+        )
       ),
     );
   }

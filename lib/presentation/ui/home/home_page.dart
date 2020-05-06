@@ -1,18 +1,21 @@
-import 'package:complex_ui/data/local/repositories/recipee_repository.dart';
-import 'package:complex_ui/presentation/assets/dimensions.dart';
+import 'package:complex_ui/data/local/models/recipe.dart';
+import 'package:complex_ui/data/local/repositories/recipe_repository.dart';
 import 'package:complex_ui/presentation/navigation/navigation.dart';
-import 'package:complex_ui/presentation/widgets/header_widget.dart';
+import 'package:complex_ui/presentation/ui/intro/intro_page.dart';
 import 'package:complex_ui/presentation/widgets/recipe_image.dart';
 import 'package:complex_ui/presentation/widgets/user_icon.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatefulWidget {
-  final RecipeeRepository recipeeRepository;
+const marginText = 34.0;
+const marginItems = 16.0;
+const sizeIcon = 16.0;
+const marginSmall = 12.0;
+const fontSizeRecommendations = 20.0;
 
-  HomePage({
-    Key key,
-    this.recipeeRepository,
-  }) : super(key: key);
+class HomePage extends StatefulWidget {
+  final RecipeRepository recipeRepository;
+
+  HomePage({Key key, this.recipeRepository}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -22,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.0,
@@ -34,55 +38,52 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(
-              left: marginScreen,
-              right: marginScreen,
-              top: marginText,
+              left: screenMargin, right: screenMargin, top: marginText
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                HeaderWidget(
-                  title: "Good ",
-                  subtitle: "${_getGreeting()}!",
-                  color: Colors.black,
-                ),
-                const SizedBox(
+                GreetingText(),
+                SizedBox(
                   height: marginText,
                 ),
                 ChipSearchBar(),
-                const SizedBox(
+                SizedBox(
                   height: marginItems,
                 ),
                 RecipeGrid(
-                  children: widget.recipeeRepository
-                      .getSpecialRecipees()
-                      .map((recipe) => RecipeImage(
-                            recipe: recipe,
-                            onClicked: (recipe, context) =>
-                                navigateToDetail(context, recipe),
-                          ))
+                  children: widget.recipeRepository
+                      .getSpecialRecipes()
+                      .map((recipe) => Hero(
+                        tag: recipe.name,
+                        child: RecipeImage(
+                          recipe: recipe,
+                          onClicked: (recipe, context) => navigateToDetail(context, recipe),
+                        ),
+                      ))
                       .toList(),
                 ),
-                const SizedBox(
+                SizedBox(
                   height: marginItems,
                 ),
               ],
             ),
           ),
           Recommendations(
-              children: widget.recipeeRepository
-                  .getRecommendations()
-                  .map((recipe) => RecipeImage(
-                        recipe: recipe,
-                        onClicked: (recipe, context) =>
-                            navigateToDetail(context, recipe),
-                      ))
-                  .toList())
+            children: widget.recipeRepository
+              .getRecommendations()
+              .map((recipe) => RecipeImage(
+                recipe: recipe,
+                onClicked: (recipe, context) => navigateToDetail(context, recipe),
+              )).toList()
+          )
         ],
       ),
     );
   }
+}
 
+class GreetingText extends StatelessWidget {
   String _getGreeting() {
     var time = DateTime.now();
     if (time.hour > 3 && time.hour < 12) {
@@ -92,6 +93,31 @@ class _HomePageState extends State<HomePage> {
     } else {
       return "night";
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+      textAlign: TextAlign.start,
+      text: TextSpan(
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: fontSizeIntro,
+          fontWeight: FontWeight.w300
+        ),
+        children: <TextSpan>[
+          TextSpan(text: "Good "),
+          TextSpan(
+            text: "${_getGreeting()}!",
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: fontSizeIntro,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -108,66 +134,94 @@ class _ChipSearchBarState extends State<ChipSearchBar> {
   @override
   Widget build(BuildContext context) {
     return Wrap(
-        spacing: 8.0,
-        children: (<Widget>[
-          TextFormField(
-              textInputAction: TextInputAction.done,
-              controller: _textController,
-              focusNode: _focusNode,
-              decoration: InputDecoration(suffixIcon: Icon(Icons.search)),
-              onFieldSubmitted: (value) {
-                _selectedWidgets.add(CookChip(
-                    text: value,
-                    onDeleted: () => setState(() {
-                          removeChipWithValue(value);
-                        })));
-                _textController.clear();
-                setState(() {});
-                _focusNode.requestFocus();
-              }),
-          ..._selectedWidgets,
-        ]));
+      spacing: 8.0,
+      children: (<Widget>[
+        TextFormField(
+          textInputAction: TextInputAction.done,
+          controller: _textController,
+          focusNode: _focusNode,
+          decoration: InputDecoration(suffixIcon: Icon(Icons.search)),
+          onFieldSubmitted: (value) {
+            _selectedWidgets.add(CookChip(
+              key: Key(value),
+              text: value,
+              onDeleted: () => setState(() {
+                removeChipWithValue(value);
+              })
+            ));
+            _textController.clear();
+            setState(() {});
+            _focusNode.requestFocus();
+          }
+        ),
+        ..._selectedWidgets,
+      ])
+    );
   }
 
   void removeChipWithValue(String value) {
-    for (var cookchip in _selectedWidgets) {
-      if (cookchip.text == value) {
-        _selectedWidgets.remove(cookchip);
+    for (var cookChip in _selectedWidgets) {
+      if (cookChip.text == value) {
+        _selectedWidgets.remove(cookChip);
         break;
       }
     }
   }
 }
 
-class CookChip extends StatelessWidget {
+class CookChip extends StatefulWidget {
+  final Key key;
   final String text;
   final VoidCallback onDeleted;
 
-  CookChip({
-    this.text,
-    this.onDeleted,
-  });
+  CookChip({this.key, this.text, this.onDeleted}) : super(key: key);
+
+  @override
+  _CookChipState createState() => _CookChipState();
+}
+
+class _CookChipState extends State<CookChip> with TickerProviderStateMixin{
+  AnimationController _animationController;
+
+  @override
+  void initState() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 150),
+    );
+    _animationController.forward();
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Chip(
-      label: Text(text),
-      deleteIcon: Icon(
-        Icons.clear,
-        size: iconSize,
+    return SizeTransition(
+      sizeFactor: _animationController,
+      axis: Axis.horizontal,
+      child: Chip(
+        label: Text(widget.text),
+        deleteIcon: Icon(Icons.clear, size: sizeIcon),
+        onDeleted: onDeleted,
       ),
-      onDeleted: onDeleted,
     );
+  }
+
+  void onDeleted(){
+    _animationController.reverse().then((_) => widget.onDeleted());
   }
 }
 
 class RecipeGrid extends StatelessWidget {
   final List<Widget> children;
 
-  RecipeGrid({
-    this.children,
-    Key key,
-  }) : super(key: key);
+  RecipeGrid({this.children, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -188,7 +242,7 @@ class RecipeGrid extends StatelessWidget {
                       height: smallBoxSize,
                       child: children[0],
                     ),
-                    const SizedBox(
+                    SizedBox(
                       height: marginSmall,
                     ),
                     SizedBox(
@@ -198,7 +252,7 @@ class RecipeGrid extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(
+                SizedBox(
                   width: marginSmall,
                 ),
                 SizedBox(
@@ -208,37 +262,56 @@ class RecipeGrid extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(
+            SizedBox(
               height: marginSmall,
             ),
-            Row(
-              children: <Widget>[
-                SizedBox(
-                  width: smallBoxSize,
-                  height: smallBoxSize,
-                  child: children[3],
-                ),
-                const SizedBox(
-                  width: marginSmall,
-                ),
-                SizedBox(
-                  width: smallBoxSize,
-                  height: smallBoxSize,
-                  child: children[4],
-                ),
-                const SizedBox(
-                  width: marginSmall,
-                ),
-                SizedBox(
-                  width: smallBoxSize,
-                  height: smallBoxSize,
-                  child: children[5],
-                ),
-              ],
-            )
+            Row(children: <Widget>[
+              SizedBox(
+                width: smallBoxSize,
+                height: smallBoxSize,
+                child: children[3],
+              ),
+              SizedBox(
+                width: marginSmall,
+              ),
+              SizedBox(
+                width: smallBoxSize,
+                height: smallBoxSize,
+                child: children[4],
+              ),
+              SizedBox(
+                width: marginSmall,
+              ),
+              SizedBox(
+                width: smallBoxSize,
+                height: smallBoxSize,
+                child: children[5],
+              ),
+            ])
           ],
         );
       },
+    );
+  }
+
+  Widget _getThreeChildView(List<Widget> children) {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          flex: 1,
+          child: Column(
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(bottom: marginSmall),
+                child: children[0]
+              ),
+              children[1],
+            ],
+          ),
+        ),
+        SizedBox(width: marginSmall),
+        Expanded(flex: 2, child: children[2]),
+      ],
     );
   }
 }
@@ -246,10 +319,7 @@ class RecipeGrid extends StatelessWidget {
 class Recommendations extends StatelessWidget {
   final List<Widget> children;
 
-  Recommendations({
-    this.children,
-    Key key,
-  }) : super(key: key);
+  Recommendations({this.children, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -258,42 +328,41 @@ class Recommendations extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(
-            left: marginScreen,
-            bottom: marginSmall,
-          ),
+          padding: const EdgeInsets.only(left: screenMargin, bottom: marginSmall),
           child: RichText(
             textAlign: TextAlign.start,
             text: TextSpan(
-              style: Theme.of(context).textTheme.headline2.copyWith(
-                    fontWeight: FontWeight.w300,
-                  ),
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: fontSizeRecommendations,
+              ),
               children: <TextSpan>[
                 TextSpan(text: "Your special\n"),
                 TextSpan(
                   text: "recommendations",
-                  style: Theme.of(context).textTheme.headline2,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: fontSizeRecommendations,
+                  ),
                 ),
               ],
             ),
           ),
         ),
         SizedBox(
-            height: itemSize,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                SizedBox(width: marginScreen),
-                ...children
-                    .map(
-                      (recipe) => Container(
-                        child: recipe,
-                        margin: EdgeInsets.only(right: marginSmall),
-                      ),
-                    )
-                    .toList()
-              ],
-            ))
+          height: itemSize,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: [
+              SizedBox(width: screenMargin),
+              ...children
+                .map((recipe) => Container(
+                  child: recipe,
+                  margin: EdgeInsets.only(right: marginSmall)
+                )).toList()],
+          )
+        )
       ],
     );
   }
