@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:complex_ui/data/local/models/recipe.dart';
+import 'package:complex_ui/data/local/models/recipee.dart';
 import 'package:complex_ui/presentation/ui/home/home_page.dart';
 import 'package:complex_ui/presentation/ui/intro/intro_page.dart';
 import 'package:complex_ui/presentation/widgets/platform_aware_button.dart';

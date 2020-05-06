@@ -1,4 +1,4 @@
-import 'package:complex_ui/data/local/models/recipe.dart';
+import 'package:complex_ui/data/local/models/recipee.dart';
 import 'package:flutter/material.dart';
 
 const radius = 16.0;

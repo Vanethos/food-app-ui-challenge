@@ -1,5 +1,5 @@
-import 'package:complex_ui/data/local/models/recipe.dart';
-import 'package:complex_ui/data/local/repositories/recipe_repository.dart';
+import 'package:complex_ui/data/local/models/recipee.dart';
+import 'package:complex_ui/data/local/repositories/recipee_repository.dart';
 import 'package:complex_ui/presentation/navigation/navigation.dart';
 import 'package:complex_ui/presentation/ui/intro/intro_page.dart';
 import 'package:complex_ui/presentation/widgets/recipe_image.dart';
