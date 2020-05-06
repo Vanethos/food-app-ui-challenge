@@ -144,9 +144,9 @@ class _BottomDetailWidgetState extends State<BottomDetailWidget> with SingleTick
   void initState() {
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 150),
+      duration: Duration(milliseconds: 100),
     );
-    Timer(Duration(milliseconds: 300), runAnimationAfterDelay);
+    Timer(Duration(milliseconds: 250), runAnimationAfterDelay);
 
     super.initState();
   }
@@ -163,8 +163,11 @@ class _BottomDetailWidgetState extends State<BottomDetailWidget> with SingleTick
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _animationController,
+    return SlideTransition(
+      position: Tween<Offset>(
+        begin: const Offset(0, 1),
+        end: Offset.zero,
+      ).animate(_animationController),
       child: Container(
         padding: EdgeInsets.all(screenMargin),
         decoration: BoxDecoration(
