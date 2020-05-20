@@ -22,7 +22,6 @@ class PlatformAwareButton extends StatelessWidget {
           buttonInsidePadding,
         ),
         child: textWidget,
-        color: Theme.of(context).primaryColor,
         onPressed: onPressed,
       );
     }
@@ -32,6 +31,8 @@ class PlatformAwareButton extends StatelessWidget {
       ),
       child: textWidget,
       onPressed: onPressed,
+      // Since we are using a Material App, it does not
+      // get the correct theme
       color: Theme.of(context).primaryColor,
     );
   }

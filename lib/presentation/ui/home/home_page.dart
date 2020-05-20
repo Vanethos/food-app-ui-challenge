@@ -23,7 +23,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         elevation: 0.0,
         actions: <Widget>[
           UserIcon(),
@@ -253,6 +252,9 @@ class Recommendations extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context).textTheme.headline2.copyWith(
+          fontWeight: FontWeight.w300,
+        );
     final itemSize = MediaQuery.of(context).size.width / 3;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

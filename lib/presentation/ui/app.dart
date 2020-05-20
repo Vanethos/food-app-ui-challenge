@@ -18,8 +18,13 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        primaryColor: Color(0xFFfcd340),
+        accentColor: Color(0xFFfcd340),
         backgroundColor: Colors.white,
+        scaffoldBackgroundColor: Colors.white,
+        buttonColor: Color(0xFFfcd340),
+        appBarTheme: AppBarTheme(
+          color: Colors.white,
+        ),
         textTheme: TextTheme(
           headline1: const TextStyle(
             color: Colors.black,
