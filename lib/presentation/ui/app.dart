@@ -55,15 +55,15 @@ class MyApp extends StatelessWidget {
       routes: {
         routeIntro: (_) => IntroPage(),
         routeHome: (_) => HomePage(
-              recipeeRepository: RecipeeRepository(),
-            )
+          recipeeRepository: RecipeeRepository(),
+        )
       },
       onGenerateRoute: (settings) {
         if (settings.name == routeDetail) {
           final arg = settings.arguments as Recipe;
           return MaterialPageRoute(
             settings: settings,
-            builder: (_) => RecipeDetailpage(
+            builder: (_) => RecipeDetailPage(
               recipe: arg,
             ),
           );

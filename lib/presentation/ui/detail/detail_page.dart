@@ -6,15 +6,15 @@ import 'package:complex_ui/presentation/widgets/recipe_image.dart';
 import 'package:complex_ui/presentation/widgets/user_icon.dart';
 import 'package:flutter/material.dart';
 
-class RecipeDetailpage extends StatefulWidget {
+class RecipeDetailPage extends StatefulWidget {
   final Recipe recipe;
 
-  const RecipeDetailpage({Key key, this.recipe}) : super(key: key);
+  const RecipeDetailPage({Key key, this.recipe}) : super(key: key);
   @override
-  _RecipeDetailpageState createState() => _RecipeDetailpageState();
+  _RecipeDetailPageState createState() => _RecipeDetailPageState();
 }
 
-class _RecipeDetailpageState extends State<RecipeDetailpage> {
+class _RecipeDetailPageState extends State<RecipeDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,10 +35,11 @@ class _RecipeDetailpageState extends State<RecipeDetailpage> {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(
-                  left: marginScreen,
-                  right: marginScreen,
-                  top: marginRecipeTop,
-                  bottom: marginRecipeBottom),
+                left: marginScreen,
+                right: marginScreen,
+                top: marginRecipeTop,
+                bottom: marginRecipeBottom
+              ),
               child: RecipeNameWidget(
                 recipe: widget.recipe,
               ),
@@ -108,71 +109,72 @@ class BottomDetailWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.all(marginScreen),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(radius),
-            topLeft: Radius.circular(radius),
-          ),
+      padding: EdgeInsets.all(marginScreen),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(radius),
+          topLeft: Radius.circular(radius),
         ),
-        child: SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      ),
+      child: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                DetailWidget(
+                  text: "${recipe.pieces} pieces",
+                  icon: Icons.adjust,
+                ),
+                DetailWidget(
+                  text: "${recipe.calories} cal",
+                  icon: Icons.add_box,
+                ),
+                DetailWidget(
+                  text: "${recipe.minDuration.inMinutes} min",
+                  icon: Icons.access_time,
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: marginItems,
+            ),
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  DetailWidget(
-                    text: "${recipe.pieces} pieces",
-                    icon: Icons.adjust,
+                  Expanded(
+                    flex: 4,
+                    child: PlatformAwareButton(
+                      text: "Start cooking",
+                      onPressed: () => print("Yay!"),
+                    ),
                   ),
-                  DetailWidget(
-                    text: "${recipe.calories} cal",
-                    icon: Icons.add_box,
+                  const SizedBox(
+                    width: marginMedium,
                   ),
-                  DetailWidget(
-                    text: "${recipe.minDuration.inMinutes} min",
-                    icon: Icons.access_time,
-                  ),
+                  AspectRatio(
+                    aspectRatio: 1.0,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(12.0),
+                          ),
+                          border: Border.all()),
+                      child: Icon(Icons.favorite),
+                    ),
+                  )
                 ],
               ),
-              const SizedBox(
-                height: marginItems,
-              ),
-              IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Expanded(
-                      flex: 4,
-                      child: PlatformAwareButton(
-                        text: "Start cooking",
-                        onPressed: () => print("Yay!"),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: marginMedium,
-                    ),
-                    AspectRatio(
-                      aspectRatio: 1.0,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(12.0),
-                            ),
-                            border: Border.all()),
-                        child: Icon(Icons.favorite),
-                      ),
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-        ));
+            )
+          ],
+        ),
+      )
+    );
   }
 }
 

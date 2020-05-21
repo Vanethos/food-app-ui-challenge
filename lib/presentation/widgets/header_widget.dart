@@ -21,15 +21,15 @@ class HeaderWidget extends StatelessWidget {
           TextSpan(
             text: title,
             style: Theme.of(context).textTheme.headline1.copyWith(
-                  fontWeight: FontWeight.w300,
-                  color: color,
-                ),
+              fontWeight: FontWeight.w300,
+              color: color,
+            ),
           ),
           TextSpan(
             text: subtitle,
             style: Theme.of(context).textTheme.headline1.copyWith(
-                  color: color,
-                ),
+              color: color,
+            ),
           ),
         ],
       ),
